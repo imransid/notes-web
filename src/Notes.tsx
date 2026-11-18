@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { api, type Note, type Page } from './api'
+import { api, type Note, type OwnedNote, type Page } from './api'
 import { Pager } from './Pager'
 import { usePaged } from './usePaged'
 
@@ -9,8 +9,12 @@ export function MyNotes() {
 
   async function remove(note: Note) {
     if (!confirm(`Delete "${note.title}"?`)) return
-    await api(`/notes/${note._id}`, { method: 'DELETE' })
-    reload()
+    try {
+      await api(`/notes/${note._id}`, { method: 'DELETE' })
+      reload()
+    } catch (err) {
+      alert((err as Error).message)
+    }
   }
 
   return (
@@ -33,6 +37,35 @@ export function MyNotes() {
           <button onClick={() => remove(note)}>Delete</button>
         </article>
       ))}
+      <Pager page={page} hasNext={result?.hasNext} onChange={setPage} />
+    </section>
+  )
+}
+
+export function AllNotes() {
+  const { result, page, setPage, error } = usePaged<Page<OwnedNote>>('/notes/all')
+
+  return (
+    <section>
+      {error && <p className="error">{error}</p>}
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody>
+          {result?.data.map((note) => (
+            <tr key={note._id}>
+              <td>{note.title}</td>
+              <td>{note.content}</td>
+              <td>{note.owner ? `${note.owner.name} (${note.owner.email})` : '-'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <Pager page={page} hasNext={result?.hasNext} onChange={setPage} />
     </section>
   )

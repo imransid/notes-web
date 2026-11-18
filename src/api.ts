@@ -12,7 +12,11 @@ export interface Note {
   _id: string
   title: string
   content: string
-  owner: string | Pick<User, '_id' | 'name' | 'email'>
+}
+
+// GET /notes/all populates the owner (null only if the user is gone).
+export interface OwnedNote extends Note {
+  owner: Pick<User, '_id' | 'name' | 'email'> | null
 }
 
 export interface Post {
