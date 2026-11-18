@@ -18,7 +18,7 @@ The API's `CORS_ORIGIN` must include this app's origin.
 
 The hosted API runs on Render's free tier. It sleeps when idle, so the first request (usually the login) can take up to a minute.
 
-Demo admin: `admin@notes.dev` / `Admin123!`. Demo user: `alice@example.com` / `Password123`.
+Demo accounts from the local seed: admin `admin@notes.dev` / `Admin123!`, user `alice@example.com` / `Password123`. The live admin password is different and is in the submission email.
 
 ## What is where
 
